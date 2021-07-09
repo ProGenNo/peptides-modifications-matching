@@ -2,7 +2,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import random
 import numpy as np
+import time
 
+start = time.time()
 #####Load data to a dataframe#####
 df = pd.read_csv('data', delimiter = "\t")
 
@@ -94,7 +96,8 @@ for index, sample in samples.iterrows():
 
 results_df = pd.DataFrame(matchings_info, columns = ['spectrum_key', 'peptide_key', 'modification_site', 'modification_mass'])
 print(results_df)
-
+print('\n')
 results_df.to_csv('matchings.csv', index=False, sep ='\t')
-
+end = time.time()
+print('Total running time : ', end-start)
 
