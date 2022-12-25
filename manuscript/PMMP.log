@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.12.17)  23 DEC 2022 21:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.12.17)  25 DEC 2022 14:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -478,8 +478,26 @@ LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <4.25> not available
 LaTeX Font Info:    Font shape `LY1/phv/m/it' in size <9> not available
 (Font)              Font shape `LY1/phv/m/sl' tried instead on input line 34.
 
+Underfull \hbox (badness 3088) in paragraph at lines 34--34
+\LY1/phv/b/n/9 Availability and Implementation: \LY1/phv/m/n/9 An open source i
+mplementation in Python is available at
+ []
+
+
 Underfull \hbox (badness 10000) detected at line 34
 []
+ []
+
+
+Underfull \hbox (badness 2521) in paragraph at lines 38--39
+\LY1/ptm/m/n/8 of peptide sequences together with their modification status (re
+f
+ []
+
+
+Underfull \hbox (badness 4193) in paragraph at lines 38--39
+\LY1/ptm/m/n/8 doi: 10.1038/nature01511). The localization of post-translationa
+l
  []
 
 
@@ -498,19 +516,6 @@ Overfull \hbox (1.12001pt too wide) has occurred while \output is active
 
 
  <./OUP_First_SBk_Bot_8401-eps-converted-to.pdf>]
-Underfull \hbox (badness 1303) in paragraph at lines 51--52
-\LY1/ptm/m/it/8 et al\LY1/ptm/m/n/8 ., 2011) that is automatically calculated f
-or all modifications
- []
-
-
-Package natbib Warning: Citation `PTM-Shepherd' on page 2 undefined on input li
-ne 57.
-
-
-Package natbib Warning: Citation `PTMiner' on page 2 undefined on input line 59
-.
-
 Package epstopdf Info: Source file: <pmmp_model.eps>
 (epstopdf)                    date: 2021-09-22 13:13:18
 (epstopdf)                    size: 1059359 bytes
@@ -519,44 +524,41 @@ Package epstopdf Info: Source file: <pmmp_model.eps>
 (epstopdf)                    size: 50601 bytes
 (epstopdf)             Command: <repstopdf --outfile=pmmp_model-eps-converted-t
 o.pdf pmmp_model.eps>
-(epstopdf)             \includegraphics on input line 79.
+(epstopdf)             \includegraphics on input line 57.
 Package epstopdf Info: Output file is already uptodate.
-<pmmp_model-eps-converted-to.pdf, id=21, 573.14125pt x 913.4125pt>
+<pmmp_model-eps-converted-to.pdf, id=19, 573.14125pt x 913.4125pt>
 File: pmmp_model-eps-converted-to.pdf Graphic file (type pdf)
 <use pmmp_model-eps-converted-to.pdf>
-Package pdftex.def Info: pmmp_model-eps-converted-to.pdf  used on input line 79
+Package pdftex.def Info: pmmp_model-eps-converted-to.pdf  used on input line 57
 .
 (pdftex.def)             Requested size: 97.19852pt x 154.90175pt.
-LaTeX Font Info:    Trying to load font information for LY1+phb on input line 8
-0.
-LaTeX Font Info:    No file LY1phb.fd. on input line 80.
+LaTeX Font Info:    Trying to load font information for LY1+phb on input line 5
+8.
+LaTeX Font Info:    No file LY1phb.fd. on input line 58.
+
 
 LaTeX Font Warning: Font shape `LY1/phb/m/n' undefined
-(Font)              using `LY1/ptm/m/n' instead on input line 80.
+(Font)              using `LY1/ptm/m/n' instead on input line 58.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-Extra height:19.0pt when 520.86812pt
-Extra height:0.0pt when 521.86812pt
-(2)Left:521.86812pt Right:519.73624pt Output:521.86812pt
+Extra height:19.0pt when 511.86812pt
+Extra height:0.0pt when 512.86812pt
+(2)Left:512.86812pt Right:506.424pt Output:512.86812pt
 - LAST -
 Extra skip:0.0pt
-Left:521.86812pt
-Right:519.73624pt
-Output:521.86812pt
+Left:512.86812pt
+Right:506.424pt
+Output:512.86812pt
 LaTeX Font Info:    Font shape `LY1/phv/m/it' in size <8> not available
-(Font)              Font shape `LY1/phv/m/sl' tried instead on input line 218.
+(Font)              Font shape `LY1/phv/m/sl' tried instead on input line 192.
 
 Overfull \hbox (252.0pt too wide) has occurred while \output is active
 [][] 
  []
 
-[2 <./pmmp_model-eps-converted-to.pdf>]
-
-Package natbib Warning: There were undefined citations.
-
-(./PMMP.aux)
+[2 <./pmmp_model-eps-converted-to.pdf>] (./PMMP.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.75pt have occurred.
@@ -566,13 +568,13 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 3983 strings out of 474968
- 56643 string characters out of 5776088
- 408288 words of memory out of 5000000
- 25420 multiletter control sequences out of 15000+600000
- 520246 words of font info for 109 fonts, out of 8000000 for 9000
+ 3982 strings out of 474968
+ 56629 string characters out of 5776088
+ 407288 words of memory out of 5000000
+ 25419 multiletter control sequences out of 15000+600000
+ 519155 words of font info for 108 fonts, out of 8000000 for 9000
  1145 hyphenation exceptions out of 8191
- 71i,11n,76p,1224b,304s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 71i,10n,76p,1224b,383s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/ly1/texnansi.enc}</usr/lo
 cal/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy9.pfb></us
 r/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/
@@ -589,7 +591,7 @@ pe1/urw/helvetic/uhvro8ac.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/u
 rw/times/utmb8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/u
 tmr8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmri8a.pfb
 >
-Output written on PMMP.pdf (2 pages, 206590 bytes).
+Output written on PMMP.pdf (2 pages, 205791 bytes).
 PDF statistics:
  95 PDF objects out of 1000 (max. 8388607)
  56 compressed objects within 1 object stream
