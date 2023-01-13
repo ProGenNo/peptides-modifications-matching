@@ -1,4 +1,7 @@
 \documentclass{bioinfo}
+
+\usepackage{easyReview}
+
 \copyrightyear{2015} \pubyear{2015}
 
 \access{Advance Access Publication Date: Day Month Year}
@@ -47,23 +50,33 @@ Here, we propose a graph-based approach that models modifications and their acce
 \begin{methods}
 \section{Methods}
 
-\subsection{Graph modeling}
+\subsection{Model}
 
-In this work the modification site localization problem is addressed by a graph theoretical approach. For each studied peptide a weighted bipartite graph ($G = \{V,E,w\}$) is used to model all possible combinations of modifications on the amino acid chain. In this graph we determine two kinds of vertices, the ones that represent the different modifications that have occured in the peptide (ie $D = \{d_1, d_2, \dots, d_k\}$) and the ones that represent all their possible acceptor sites in the amino acid chain (ie $A = \{a_1, a_2, \dots, a_n\}$). The set of the graph's vertices $V$ is then formed by the union of the sets $A$ and $D$ (ie $V = A \cup D$). For each modification, an edge is formed between the corresponding vertex and the ones that represent its possible acceptor sites. Moreover, a weight is assigned to each edge, taking the value of the confidence score (\textbf{is this really a confidence score???}, have to better describe the scores we're using...) which represents the probability of the modification to have occurred in that specific site of the amino acid chain. An example of a graph model for a modified peptide is presented in Fig. \ref{fig:PMMP_model}
+In this work the modification site localization problem is addressed by a graph approach. For each PSM, a weighted bipartite graph ($G = \{V,E,w\}$) is used to model all possible combinations of modifications on the amino acid chain. In this graph we determine two kinds of vertices, the ones that represent the different modifications (i.e. $D = \{d_1, d_2, \dots, d_k\}$) and the ones that represent all their possible acceptor sites (i.e. $A = \{a_1, a_2, \dots, a_n\}$). The set of vertices $V$ is then formed by the union of the sets $A$ and $D$ (i.e. $V = A \cup D$). For each modification, an edge is formed between the corresponding vertex and each possible acceptor site. A weight is assigned to each edge corresponding to the modification localization score.
 
-Using this graph modeling we can reduce the modification site localization problem to the maximum weight matching problem on the resulting graph. This consists of finding a set of edges that are pairwise non-adjacent (without common vertices), in which the sum of weights is maximized. Solving this problem in the graph model of our application will result in the best combination of modifications localization on the peptide, based on their confidence scores. 
+Using this model we reduce the modification site assignment problem to the maximum weight matching problem on the resulting graph. This consists in finding a set of edges that are pairwise non-adjacent and without common vertices, in which the sum of weights is maximized. Solving this problem in the graph model of our application results in the combination of modification localizations that maximizes modification localization scores. 
 
-\begin{figure}[!tpb]%figure2
-	\centerline{\includegraphics[width=0.2\textwidth]{pmmp_model.eps}}
-	\caption{Graph representation of a peptide with 2 Acetylations and 1 Trimethylation with all their possible acceptor sites.}\label{fig:PMMP_model}
-	%RLAVTGPRYRHPKKVGGTSPASKRTAKTALQKRPAKGGTSKRATQKTLA
-\end{figure}
 
-(mention the usage of python's networkX library implementation of the maximum weight matching algorithm based on methods invented by Jack Edmonds 1965 \textbf{???})
 
-\subsection{Python implementation}
+\subsection{Implementation}
 
-\subsection{Java implementation}
+We provide an open source Python-based implementation of our approach freely available under a GPL-3.0 license (github.com/ProGenNo/peptides-modifications-matching). We used the networkX library implementation of the maximum weight matching algorithm based on methods established by Jack Edmonds in 1965 \alert{(please add the corresponding references and briefly describe the implementation)}.
+
+We also provide an open source Java-based implementation freely available as part of the compomics-utilities library (ref doi: 10.1186/1471-2105-12-70) under an Apache-2.0 license. The implementation is located in the \textit{com.compomics.util.experiment.identification.modification.peptide\_mapping} package. The maximum weight matching is conducted using the jgrapht package (ref 10.1145/3381449). The implementation in compomics-utilities is readily usable via the PeptideShaker tool (ref doi: 10.1038/nbt.3109).
+
+\comment{TODO Marc}{Write wiki page in compomics-utilities}
+
+\subsection{Histone example}
+
+\comment{TODO}{Write Histone example}
+
+\subsection{Performance benchmark}
+
+We generated sets of peptides of length 30 with multiple random sets of modifications. For each peptide, the number of distinct modifications was randomly generated between one and ten. For every modification, up to six modification sites were randomly selected, and the number of modified residues was randomly set between one and the number of modification sites. Finally, modification localization scores were given randomly for all modification sites and the matching of modification to site was conducted using the Java implementation. The code was run for different batches of peptides using different number of threads on a laptop computer, and the processing time was recorded. 
+
+Subsequently, we generated peptides in a similar fashion, but fixed the number of distinct modifications, modification sites, and modified residues. We then benchmarked the processing time for all possible combinations using 1,000 peptides per thread and all threads available.
+
+Each benchmark was replicated ten times. The code used to benchmark the application is available in the \textit{com.compomics.util.experiment.identification.modification.peptide\_mapping.performance} package of the compomics-utilities library.
 
 %text\vspace*{1pt}
 
@@ -114,19 +127,36 @@ Using this graph modeling we can reduce the modification site localization probl
 
 \subsection{Histone modification localization example}
 
+
+ An example of a graph model for a modified peptide is presented in Fig. \ref{fig:histone_peptide}, where one site was reported by the search engine to carry a dimethylation and four were found to carry an acetylation. The maximum weight matching then assigned the modifications to the best scoring residues while avoiding to put the dimethylation on the same amino acid as an acetylation. Note that our approach can be applied to peptides carrying any combination of modification identified by proteomic search engines.
+ 
+ \begin{figure}[!tpb]
+ 	\centerline{\includegraphics[width=0.2\textwidth]{figures/figure_histone.png}}
+ 	\caption{Graph representation of a peptide with four acetylations and one dimethylation with all their possible acceptor sites and the respective localization scores.}\label{fig:histone_peptide}
+ \end{figure}
+
+\comment{TODO}{A word on conflict resolution and "corner cases"?}
+ 
+
 \subsection{Performance}
 
+Benchmarking the performance of the matching algorithm demonstrated that around one million peptides could be processed per minute and per thread. Since the peptides are scored individually, they can be processed in parallel and as soon as approximately 1,000 peptides were available, the processing time increased linearly with the number of peptides and the number of threads (Figure \ref{fig:performance_threads}). For a given peptide, the modification matching time increased with the number of different modifications, the number of sites, and the number of modified residues (Figure \ref{fig:performance_size}). In all configurations, the modification site assignment took only few seconds for thousands of peptides, which is negligible compared to the search time, which can be of several hours, as was the case for the Histone example.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%     please remove the " % " symbol from \centerline{\includegraphics{fig01.eps}}
-%     as it may ignore the figures.
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[!tpb]
+	\centerline{\includegraphics[width=0.2\textwidth]{figures/benchmark_29.12.22_threads.png}}
+	\caption{Processing time multiplied by the number of thread plotted against the number of peptides for benchmark runs of equal numbers of peptides. Runs with different number of threads are jittered from left to right and plotted with different colors.}\label{fig:performance_threads}
+\end{figure}
 
+
+\begin{figure}[!tpb]
+\centerline{\includegraphics[width=0.2\textwidth]{figures/benchmark_29.12.22_size.png}}
+\caption{For different baches of 1,000 peptides per thread using 16 threads, processing time per peptide against number of sites multiplied by number of modified residues. Peptides with different number of distinct modifications are colored differently.}\label{fig:performance_size}
+\end{figure}
 
 
 \section{Conclusion}
+
+
 
 %\begin{enumerate}
 %\item this is item, use enumerate
