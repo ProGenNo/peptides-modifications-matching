@@ -44,18 +44,15 @@
 \subsection*{Abstract} 
 
 \textbf{Summary:} 
-	Assigning protein post-translational modifications to acceptor sites requires the distribution of modifications in a way that maximizes localization scores while avoiding chemically impossible configurations. We provide an efficient graph-based approach to this problem implemented both as standalone implementation and integrated in the PeptideShaker interface. \\
+	Assigning protein post-translational modifications to acceptor sites requires the distribution of modifications in a way that maximizes localization scores while avoiding chemically impossible configurations. We provide an efficient graph-based approach to this problem implemented both as standalone implementation and integrated in the PeptideShaker software tool. \\
 \textbf{Availability and Implementation:} 
 	An open source implementation in Python is available at https://github.com/ProGenNo/peptides-modifications-matching under a GPL-3.0 license. An open source implementation in Java is available at github.com/compomics/compomics-utilities under an Apache-2.0 license. \\
-\textbf{Contact:} \href{marc.vaudel@uib.no}{marc.vaudel@uib.no}\\
-\textbf{Supplementary information:} Supplementary data are available at \textit{Bioinformatics}
-online.
 
 \maketitle
 
 \section{Introduction}
 
-In mass spectrometry-based proteomics, mass spectra of fragmented peptides are matched against a database of protein sequences using a proteomic search engine, allowing the high throughput identification of peptide sequences together with their modification status \cite{Mass_spec_proteomics}. The localization of post-translational modifications (PTMs) on protein sequences is an important functional information \cite{Phosphoproteomics}. Furthermore, since amino acid substitutions can have the same mass difference as a modification, an incorrectly localized modification can be misinterpreted, yielding a false variant call \cite{SNPs_PTMs_same_mass} \comment{(ref mass PTM variant)}{Is this the paper you meant?}. To evaluate the localization of modifications on a peptide sequence, multiple localization scores were developed that estimate the likelihood for a given acceptor site to be occupied for every modification of every peptide to spectrum match (PSM) \cite{Localization_scoring, computational_phosphoproteomics}.
+In mass spectrometry-based proteomics, mass spectra of fragmented peptides are matched against a database of protein sequences using a proteomic search engine, allowing the high throughput identification of peptide sequences together with their modification status \cite{Mass_spec_proteomics}. The localization of post-translational modifications (PTMs) on protein sequences is an important functional information \cite{Phosphoproteomics}. Furthermore, since amino acid substitutions can have the same mass difference as a modification, an incorrectly localized modification can be misinterpreted, yielding a false variant call \cite{SNPs_PTMs_same_mass}. To evaluate the localization of modifications on a peptide sequence, multiple localization scores were developed that estimate the likelihood for a given acceptor site to be occupied for every modification of every peptide to spectrum match (PSM) \cite{Localization_scoring, computational_phosphoproteomics}.
 
 Once the localization scores have been computed, the modifications are assigned to the sites of most likely localization before further processing, e.g. error rate estimation using Percolator \cite{Percolator}. It is important to note that due to differences in scoring, and especially since search engines often only consider the most intense peaks in mass spectra, the peptide maximizing the modification localization scores is not necessarily the best scoring peptide in the search engine results. And since the search engines also often have limitations in terms of how many modification sites combinations they consider, the peptide maximizing localization scores might not even be in the list of peptide candidates returned by the search engine.
 
@@ -69,20 +66,22 @@ Here, we propose a graph-based approach that models modifications and their acce
 
 In this work the modification site localization problem is addressed by a graph approach. For each PSM, a weighted  bipartite graph ($G = \{V,E,w\}$) is used to model all possible combinations of modifications on the amino acid chain. In this graph we determine two kinds of vertices, the ones that represent the different modifications (i.e. $D = \{d_1, d_2, \dots, d_k\}$) and the ones that represent all their possible acceptor sites (i.e. $A = \{a_1, a_2, \dots, a_n\}$). The set of vertices $V$ is then formed by the union of the sets $A$ and $D$ (i.e. $V = A \cup D$). For each modification, an edge is formed between the corresponding vertex and each possible acceptor site. A weight $w_{i,j}$ is assigned to each edge $e_{i,j}$ corresponding to the localization score of the modification $d_i$ to the acceptor site $a_j$.
 
-Using this model we reduce the modification site assignment problem to the  maximum weight maximum cardinality matching problem on the resulting bipartite graph. The solution of this problem will be a set of pairwise non-adjacent edges satisfying two conditions. The first one is that the matching will be of maximum cardinality which in this modeling ensures that all the vertices that represent a modification will be matched. The second condition is that the weight of the matching is the maximum which means that it provides the combination of modifications and acceptor sites that give the maximum localization score in total.
+Using this model we reduce the modification site assignment problem to the   \comment{maximum}{Minimum or maximum?} weight maximum cardinality matching problem on the resulting bipartite graph. The solution of this problem will be a set of pairwise non-adjacent edges satisfying two conditions. The first one is that the matching will be of maximum cardinality which in this modeling ensures that all the vertices that represent a modification will be matched. The second condition is that the weight of the matching is the maximum which means that it provides the combination of modifications and acceptor sites that give the maximum localization score in total.
 
 
 \subsection{Implementation}
 
-We provide an open source Python-based implementation of our approach freely available under a GPL-3.0 license (github.com/ProGenNo/peptides-modifications-matching). We used the networkX library implementation of Karp's algorithm for the rectangular linear assignment problem \cite{Karp_assignment}. Since this algorithm minimizes the total weight of the resulting matching the weights of the edges from the model described above were transformed accordingly so as the maximum localization score corresponded to the minimum edge weight. The script of the implementation receives as input a text file where a description of the available PSMs is included. It requires one line per PSM with the information of the spectrum and peptide IDs as well as the modifications with their possible acceptor sites and the corresponding localization scores. Further information are available at the github repository.  \alert{(please add the corresponding references and briefly describe the implementation) \textbf{Is that sufficient?}}.
+We provide an open source Python-based implementation of our approach available under a GPL-3.0 license (github.com/ProGenNo/peptides-modifications-matching). We used the networkX library (networkx.org) implementation of Karp's algorithm for the rectangular linear assignment problem \cite{Karp_assignment}. Since this algorithm minimizes the total weight of the resulting matching the weights of the edges from the model described above were transformed accordingly so as the maximum localization score corresponded to the minimum edge weight. The script of the implementation receives as input a text file where a description of the available PSMs is included. It requires one line per PSM with the information of the spectrum and peptide IDs as well as the modifications with their possible acceptor sites and the corresponding localization scores. Further information are available at the github repository.
 
-We also provide an open source Java-based implementation freely available as part of the compomics-utilities library \cite{compomics} under an Apache-2.0 license. The implementation is located in the \textit{com.compomics.util.experiment.identification.modification.peptide\_mapping} package and it makes use of the JGraphT package \cite{JGraphT} with a similar model transformation as in the case above. The implementation in compomics-utilities is readily usable via the PeptideShaker tool \cite{PeptideShaker}. \highlight{We have cited PeptideShaker in the intro as well, is the citation here required? same for compomics on this paragraph}
+We also provide an open source Java-based implementation freely available as part of the compomics-utilities library \cite{compomics} under an Apache-2.0 license. The implementation is located in the \textit{com.compomics.util.experiment.identification.modification.peptide\_mapping} package and it makes use of the JGraphT package \cite{JGraphT} with a similar model transformation as \remove{in the case above} for the python implementation. The implementation in compomics-utilities is readily usable \textit{via} the PeptideShaker tool \cite{PeptideShaker}. \highlight{We have cited PeptideShaker in the intro as well, is the citation here required? same for compomics on this paragraph}
 
-\comment{TODO Marc}{Write wiki page in compomics-utilities}
+\comment{}{TODO Marc: Write wiki page in compomics-utilities}
 
 \subsection{Histone example}
 
-\comment{TODO}{Write Histone example}
+A dataset acquired on a synthetic histone peptide with different combinations of modifications was searched using \comment{MS-Amanda}{PMID 33759252} using \comment{SearchGUI}{PMID 29774740}. The result file of MS-Amanda was processed using PeptideShaker where all modifications were scored using \comment{PhosphoRS}{PMID 22073976}.
+
+\comment{}{TODO Marc: Check with Veit}
 
 \subsection{Performance benchmark}
 
@@ -110,16 +109,16 @@ Each benchmark was replicated ten times. The code used to benchmark the applicat
 
 \subsection{Performance}
 
-Benchmarking the performance of the matching algorithm demonstrated that around one million peptides could be processed per minute and per thread. Since the peptides are scored individually, they can be processed in parallel and as soon as approximately 1,000 peptides were available, the processing time increased linearly with the number of peptides and the number of threads (Figure \ref{fig:performance_threads}). For a given peptide, the modification matching time increased with the number of different modifications, the number of sites, and the number of modified residues (Figure \ref{fig:performance_size}). In all configurations, the modification site assignment took only few seconds for thousands of peptides, which is negligible compared to the search time, which can be of several hours, as was the case for the Histone example.
+Benchmarking the performance of the matching algorithm demonstrated that around one million peptides could be processed per minute and per thread. Since the peptides are scored individually, they can be processed in parallel and as soon as approximately 1,000 peptides were available, the processing time increased linearly with the number of peptides and the a minor increase in processing time was observed when using multiple threads, which we impute to Java having to manage many more objects (Figure \ref{fig:performance_threads}). For a given peptide, the modification matching time increased with the number of different modifications, the number of sites, and the number of modified residues (Figure \ref{fig:performance_size}). In all configurations, the modification site assignment took only few seconds for thousands of peptides, which is negligible compared to the search time, which can be of several hours, as was the case for the Histone example.
 
 \begin{figure}[!tpb]
-	\centerline{\includegraphics[width=0.6\textwidth]{figures/benchmark_29.12.22_threads.png}}
-	\caption{Processing time multiplied by the number of thread plotted against the number of peptides for benchmark runs of equal numbers of peptides. Runs with different number of threads are jittered from left to right and plotted with different colors.}\label{fig:performance_threads}
+	\centerline{\includegraphics[width=0.6\textwidth]{figures/benchmark_23.02.02_threads.png}}
+	\caption{Processing time multiplied by the number of thread plotted against the number of peptides for benchmark runs of equal numbers of peptides. Note that log scales are used on both axes. Runs with different number of threads are jittered from left to right and plotted with different colors.}\label{fig:performance_threads}
 \end{figure}
 
 
 \begin{figure}[!tpb]
-\centerline{\includegraphics[width=0.6\textwidth]{figures/benchmark_29.12.22_size.png}}
+\centerline{\includegraphics[width=0.6\textwidth]{figures/benchmark_23.02.02_size.png}}
 \caption{For different baches of 1,000 peptides per thread using 16 threads, processing time per peptide against number of sites multiplied by number of modified residues. Peptides with different number of distinct modifications are colored differently.}\label{fig:performance_size}
 \end{figure}
 
@@ -127,10 +126,7 @@ Benchmarking the performance of the matching algorithm demonstrated that around 
 \section{Conclusion}
 
 
-\section*{Acknowledgements}
-
-
-\section*{Funding}
+\section{Acknowledgements}
 
 This work was supported by the Research Council of Norway (project \#301178 to MV) and the University of Bergen.
 

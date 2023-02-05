@@ -24,17 +24,50 @@ theme_set(theme_bw(base_size = 14))
 # Load data
 
 threads_data <- read.table(
-  file = "benchmark/benchmark_29.12.22_threads",
+  file = "benchmark/benchmark_23.02.02.benchmark_threads",
   header = T,
   sep = "\t",
   stringsAsFactors = F
 )
 size_data <- read.table(
-  file = "benchmark/benchmark_29.12.22_size",
+  file = "benchmark/benchmark_23.02.02.benchmark_size",
   header = T,
   sep = "\t",
   stringsAsFactors = F
 )
+
+
+# Share of fails
+
+threads_data <- threads_data %>% 
+  mutate(
+    share_fails = 100 * failed/peptides
+  )
+
+ggplot() +
+  geom_point(
+    data = threads_data,
+    mapping = aes(
+      x = log10(peptides),
+      y = share_fails
+    ),
+    alpha = 0.2
+  )
+
+size_data <- size_data %>% 
+  mutate(
+    share_fails = 100 * failed/peptides
+  )
+
+ggplot() +
+  geom_point(
+    data = size_data,
+    mapping = aes(
+      x = occupancy/sites,
+      y = share_fails
+    ),
+    alpha = 0.2
+  )
 
 
 # build thread figure
@@ -74,9 +107,9 @@ plot_threads <- ggplot() +
     labels = 10^(1:6)
   ) +
   scale_y_continuous(
-    name = "Time * threads",
-    breaks = log10(c(10, 100, 1000, 10 * 1000, 60 * 1000)),
-    labels = c("10 ms", "100 ms", "1 s", "10 s", "1 min")
+    name = "Time * number of threads",
+    breaks = log10(c(10, 100, 1000, 10 * 1000, 60 * 1000, 5 * 60 * 1000)),
+    labels = c("10 ms", "100 ms", "1 s", "10 s", "1 min", "5 min")
   ) +
   scale_color_manual(
     name = "Threads",
@@ -108,9 +141,9 @@ plot_threads <- ggplot() +
   )
 
 png(
-  filename = "benchmark/benchmark_29.12.22_threads.png",
-  width = 400,
-  height = 300
+  filename = "benchmark/benchmark_23.02.02_threads.png",
+  width = 600,
+  height = 450
 )
 grid.draw(plot_threads)
 device <- dev.off()
@@ -163,9 +196,9 @@ size_plot <- ggplot() +
   )
 
 png(
-  filename = "benchmark/benchmark_29.12.22_size.png",
-  width = 400,
-  height = 300
+  filename = "benchmark/benchmark_23.02.02_size.png",
+  width = 600,
+  height = 450
 )
 grid.draw(size_plot)
 device <- dev.off()
