@@ -18,6 +18,8 @@
 	%showframe, % Uncomment to show how the type block is set on the page
 }
 
+\usepackage{subfig}
+
 
 \title{A graph-based approach for modification site assignment in proteomics}
 
@@ -41,6 +43,8 @@
 	
 \maketitle
 
+\comment{}{Do we miss one of Harald's affiliations?}
+
 \subsection*{Abstract} 
 
 \textbf{Summary:} 
@@ -58,28 +62,31 @@ Once the localization scores have been computed, the modifications are assigned 
 
 In order to find the peptide maximizing the modification localization scores, the modifications found by the search engine need to be assigned to the site with highest localization score without yielding a configuration that is not chemically possible: modifications have different types of acceptor sites, e.g. amino acids or termini, and cannot be stacked on the same acceptor site. While maximizing the scores is trivial with a couple of modifications, e.g. phosphorylation and oxidation, the problem becomes more complex when combining many modifications with possible conflicting sites, e.g. in the study of histones \cite{Histone_study}. Furthermore, since this needs to be conducted on millions PSMs per experiment, the site assignment needs to be fast.
 
-Here, we propose a graph-based approach that models modifications and their acceptor sites, and returns a configuration that maximizes localization scores with controlled processing time. The modification assignment problem is reduced to the minimum weight matching problem in bipartite graphs, by modelling modifications and acceptor sites as vertices, connected by edges whose weights are calculated based on the corresponding modification localization scores. We provide a standalone Python implementation as well as a Java implementation in the compomics-utilities library \cite{compomics} and demonstrate its usage in PeptideShaker \cite{PeptideShaker}.
+Here, we propose a graph-based approach that models modifications and their acceptor sites, and returns a configuration that maximizes localization scores with controlled processing time. The modification assignment problem is reduced to the maximum weight maximum cardinality matching problem in bipartite graphs, by modelling modifications and acceptor sites as vertices, connected by edges whose weights are calculated based on the corresponding modification localization scores. We provide a standalone Python implementation as well as a Java implementation in the compomics-utilities library \cite{compomics} and demonstrate its usage in PeptideShaker \cite{PeptideShaker}.
 
 \section{Methods}
 
 \subsection{Model}
 
-In this work the modification site localization problem is addressed by a graph approach. For each PSM, a weighted  bipartite graph ($G = \{V,E,w\}$) is used to model all possible combinations of modifications on the amino acid chain. In this graph we determine two kinds of vertices, the ones that represent the different modifications (i.e. $D = \{d_1, d_2, \dots, d_k\}$) and the ones that represent all their possible acceptor sites (i.e. $A = \{a_1, a_2, \dots, a_n\}$). The set of vertices $V$ is then formed by the union of the sets $A$ and $D$ (i.e. $V = A \cup D$). For each modification, an edge is formed between the corresponding vertex and each possible acceptor site. A weight $w_{i,j}$ is assigned to each edge $e_{i,j}$ corresponding to the localization score of the modification $d_i$ to the acceptor site $a_j$.
+In this work the modification site localization problem is addressed by a graph approach. For each PSM, a weighted  bipartite graph ($G = \{V,E,w\}$) is used to model all possible combinations of modifications on the amino acid chain. In this graph we determine two kinds of vertices, the ones that represent the different modifications (i.e. $D = \{d_1, d_2, \dots, d_k\}$) and the ones that represent all their possible acceptor sites (i.e. $A = \{a_1, a_2, \dots, a_n\}$). \comment{ For example, if for a modified peptide there are reported four acetylations and one dimethylation and there are 8 sites in the amino acid chain where either one or both of these modifications can occur, then the model will have 13 vertices in total ($\|D\| = 5$ and $\|A\| = 8$).}{I added this example here to make the model more clear, is it helping?} The set of vertices $V$ is then formed by the union of the sets $A$ and $D$ (i.e. $V = A \cup D$). For each modification, an edge is formed between the corresponding vertex and the vertex of each one of its possible acceptor sites. A weight $w_{i,j}$ is assigned to each edge $e_{i,j}$ corresponding to the localization score of the modification $d_i$ to the acceptor site $a_j$.
 
-Using this model we reduce the modification site assignment problem to the   \comment{maximum}{Minimum or maximum?} weight maximum cardinality matching problem on the resulting bipartite graph. The solution of this problem will be a set of pairwise non-adjacent edges satisfying two conditions. The first one is that the matching will be of maximum cardinality which in this modeling ensures that all the vertices that represent a modification will be matched. The second condition is that the weight of the matching is the maximum which means that it provides the combination of modifications and acceptor sites that give the maximum localization score in total.
+Using this model we reduce the modification site assignment problem to the maximum weight maximum cardinality matching problem on the resulting bipartite graph. The solution of this problem will be a set of pairwise non-adjacent edges satisfying two conditions. The first one is that the matching will be of maximum cardinality, which in this modeling ensures that all the vertices that represent a modification will be matched. The second condition is that the weight of the matching is maximum, which means that it provides the combination of modifications and acceptor sites that gives the maximum localization score in total.
 
 
 \subsection{Implementation}
 
-We provide an open source Python-based implementation of our approach available under a GPL-3.0 license (github.com/ProGenNo/peptides-modifications-matching). We used the networkX library (networkx.org) implementation of Karp's algorithm for the rectangular linear assignment problem \cite{Karp_assignment}. Since this algorithm minimizes the total weight of the resulting matching the weights of the edges from the model described above were transformed accordingly so as the maximum localization score corresponded to the minimum edge weight. The script of the implementation receives as input a text file where a description of the available PSMs is included. It requires one line per PSM with the information of the spectrum and peptide IDs as well as the modifications with their possible acceptor sites and the corresponding localization scores. Further information are available at the github repository.
+We provide an open source Python-based implementation of our approach available under a GPL-3.0 license (github.com/ProGenNo/peptides-modifications-matching). For this we used the networkX \cite{networkX} library and its algorithm for the minimum weight full matching problem. This algorithm when applied on our model produces a matching $M$ with cardinality $\|M\| = min\{\|A\|, \|D\|\} = \|D\|$ which ensures that all the modifications will be matched to a site in the amino acid chain (because the model assumes that the graph is connected and there are at least as many possible acceptor sites as there are modifications, therefore $\|A\| \geq \|D\|$). However the algorithm produces a matching that minimizes the sum of weights of the corresponding edges. Therefore in order to be suitable for the modification assignment problem, the weights of the edges from the model described in this work were transformed accordingly so as the maximum localization score corresponded to the minimum edge weight. The script of the implementation receives as input a text file where a description of the available PSMs is included. It requires one line per PSM with the information of the spectrum and peptide IDs as well as the modifications with their possible acceptor sites and the corresponding localization scores. Exceptions are thrown for each PSM if there are fewer acceptor sites given than modifications, or if there is no possible full matching in the resulting graph or if the localization scores take negative values. Further information are available at the github repository. 
 
-We also provide an open source Java-based implementation freely available as part of the compomics-utilities library \cite{compomics} under an Apache-2.0 license. The implementation is located in the \textit{com.compomics.util.experiment.identification.modification.peptide\_mapping} package and it makes use of the JGraphT package \cite{JGraphT} with a similar model transformation as \remove{in the case above} for the python implementation. The implementation in compomics-utilities is readily usable \textit{via} the PeptideShaker tool \cite{PeptideShaker}. \highlight{We have cited PeptideShaker in the intro as well, is the citation here required? same for compomics on this paragraph}
+We also provide an open source Java-based implementation freely available as part of the compomics-utilities library \cite{compomics} under an Apache-2.0 license. It is located in the \textit{com.compomics.util.experiment.identification.modification.peptide\_mapping} package and makes use of the JGraphT package \cite{JGraphT}. This includes an implementation of the Kuhn-Munkres algorithm for the assignment problem, which requires as input a complete bipartite graph and produces a perfect matching with minimum weight. To make this algorithm suitable for the modification assignment problem the weights of the edges of the model proposed in this work were transformed as in the python implementation. Also, the graph model was made complete with the addition of dummy vertices and edges if needed, while ensuring that the perfect matching of minimum weight still corresponded to the best assignment of modifications to acceptor sites. For more information see the implementation in compomics-utilities, which is readily usable \textit{via} the PeptideShaker tool \cite{PeptideShaker}.
+
+
+\comment{}{Since for the implementations both for python and java we are transforming the proposed model a bit (because the available libraries don't solve the exact same algorithm we need), should I describe this transformation more mathematically so it's more solid as an explanation? (because the algorithm freak in my head is not very happy with this description I have now) But this would make the text a bit more difficult to read from the perspective of a bioinformatician user of the tool, and also I don't know if such an extensive explanation is relevant for such papers, so which is the best approach in our case? Should I just leave the text as it is now? }
 
 \comment{}{TODO Marc: Write wiki page in compomics-utilities}
 
 \subsection{Histone example}
 
-A dataset acquired on a synthetic histone peptide with different combinations of modifications was searched using \comment{MS-Amanda}{PMID 33759252} using \comment{SearchGUI}{PMID 29774740}. The result file of MS-Amanda was processed using PeptideShaker where all modifications were scored using \comment{PhosphoRS}{PMID 22073976}.
+A dataset acquired on a synthetic histone peptide with different combinations of modifications was searched using MS-Amanda \cite{MS_Amanda} using SearchGUI \cite{SearchGUI}. The result file of MS-Amanda was processed using PeptideShaker where all modifications were scored using PhosphoRS \cite{PhosphoRS}.
 
 \comment{}{TODO Marc: Check with Veit}
 
@@ -97,33 +104,51 @@ Each benchmark was replicated ten times. The code used to benchmark the applicat
 \subsection{Histone modification localization example}
 
 
- An example of a graph model for a modified peptide is presented in Fig. \ref{fig:histone_peptide}, where one site was reported by the search engine to carry a dimethylation and four were found to carry an acetylation. The maximum weight matching then assigned the modifications to the best scoring residues while avoiding to put the dimethylation on the same amino acid as an acetylation. Note that our approach can be applied to peptides carrying any combination of modification identified by proteomic search engines.
+ An example of a graph model for a modified peptide is presented in Fig. \ref{fig:histone_peptide}, where one site was reported by the search engine to carry a dimethylation and four were found to carry an acetylation. The maximum weight matching then assigned the modifications to the best scoring residues while avoiding to put the dimethylation on the same amino acid as an acetylation. As seen in this example, in case there are multiple combinations that give the same total sum of localization scores,  one of them will be chosen randomly. Note that our approach can be applied to peptides carrying any combination of modifications identified by proteomic search engines.
+ 
+ \comment{}{\textbf{Figure 1:} Should we say that the edges with the black localization scores are the ones chosen by the algorithm to give the best matching? Also please check my comment on the Figure 1 legend.}
  
  \begin{figure}[!tpb]
  	\centerline{\includegraphics[width=0.6\textwidth]{figures/figure_histone.png}}
- 	\caption{Graph representation of a peptide with four acetylations and one dimethylation with all their possible acceptor sites and the respective localization scores.}\label{fig:histone_peptide}
+ 	\caption{Graph representation of a peptide with four acetylations and one dimethylation with all their possible acceptor sites and the respective localization scores. \textbf{*} In the actual graph model we propose, we have 4 different vertices for the acetylation modification, and all of them would have the same edges shown in this figure. So the real graph model looks a bit messier than this nice example. \textbf{*}}\label{fig:histone_peptide}
  \end{figure}
 
-\comment{TODO}{A word on conflict resolution and "corner cases"?}
+
+
+\comment{TODO}{A word on conflict resolution and \textbf{"corner cases"}? \textbf{*} The corner case where a low score needs to be prioritized is solved by ensuring the maximum cardinality of the matching, as explained in the Model section. Should I have a relevant example to explain it further here, with a graph like Figure 1 ? \textbf{*}}
  
 
 \subsection{Performance}
 
-Benchmarking the performance of the matching algorithm demonstrated that around one million peptides could be processed per minute and per thread. Since the peptides are scored individually, they can be processed in parallel and as soon as approximately 1,000 peptides were available, the processing time increased linearly with the number of peptides and the a minor increase in processing time was observed when using multiple threads, which we impute to Java having to manage many more objects (Figure \ref{fig:performance_threads}). For a given peptide, the modification matching time increased with the number of different modifications, the number of sites, and the number of modified residues (Figure \ref{fig:performance_size}). In all configurations, the modification site assignment took only few seconds for thousands of peptides, which is negligible compared to the search time, which can be of several hours, as was the case for the Histone example.
+Benchmarking the performance of the matching algorithm demonstrated that around one million peptides could be processed per minute and per thread. Since the peptides are scored individually, they can be processed in parallel and as soon as approximately 1,000 peptides were available, the processing time increased linearly with the number of peptides and a minor increase in processing time was observed when using multiple threads, which we impute to Java having to manage many more objects (Figure \ref{fig:performance_threads}). For a given peptide, the modification matching time increased with the number of different modifications, the number of sites, and the number of modified residues (Figure \ref{fig:performance_size}). In all configurations, the modification site assignment took only few seconds for thousands of peptides, which is negligible compared to the search time, which can be of several hours, as was the case for the Histone example.
 
-\begin{figure}[!tpb]
-	\centerline{\includegraphics[width=0.6\textwidth]{figures/benchmark_23.02.02_threads.png}}
-	\caption{Processing time multiplied by the number of thread plotted against the number of peptides for benchmark runs of equal numbers of peptides. Note that log scales are used on both axes. Runs with different number of threads are jittered from left to right and plotted with different colors.}\label{fig:performance_threads}
-\end{figure}
+%\begin{figure}[!tpb]
+%	\centerline{\includegraphics[width=0.6\textwidth]{figures/benchmark_23.02.02_threads.png}}
+%	\caption{Processing time multiplied by the number of thread plotted against the number of peptides for benchmark runs of equal numbers of peptides. Note that log scales are used on both axes. Runs with different number of threads are jittered from left to right and plotted with different colors.}\label{fig:performance_threads}
+%\end{figure}
 
 
-\begin{figure}[!tpb]
-\centerline{\includegraphics[width=0.6\textwidth]{figures/benchmark_23.02.02_size.png}}
-\caption{For different baches of 1,000 peptides per thread using 16 threads, processing time per peptide against number of sites multiplied by number of modified residues. Peptides with different number of distinct modifications are colored differently.}\label{fig:performance_size}
+%\begin{figure}[!tpb]
+%\centerline{\includegraphics[width=0.6\textwidth]{figures/benchmark_23.02.02_size.png}}
+%\caption{For different baches of 1,000 peptides per thread using 16 threads, processing time per peptide against number of sites multiplied by number of modified residues. Peptides with different number of distinct modifications are colored differently.}\label{fig:performance_size}
+%\end{figure}
+
+\begin{figure}[!ht]
+	\subfloat[\label{fig:performance_threads}]{%
+		\includegraphics[width=0.49\textwidth]{figures/benchmark_23.02.02_threads.png}
+	}
+	\hfill
+	\subfloat[\label{fig:performance_size}]{%
+		\includegraphics[width=0.49\textwidth]{figures/benchmark_23.02.02_size.png}
+	}
+	\caption{(a) Processing time multiplied by the number of thread plotted against the number of peptides for benchmark runs of equal numbers of peptides. Note that log scales are used on both axes. Runs with different number of threads are jittered from left to right and plotted with different colors. (b) For different baches of 1,000 peptides per thread using 16 threads, processing time per peptide against number of sites multiplied by number of modified residues. Peptides with different number of distinct modifications are colored differently.}
+	\label{fig:performance_test}
 \end{figure}
 
 
 \section{Conclusion}
+
+	This work addresses the problem of finding the optimal assignment of post translational modifications (PTMs) to residues in the amino acid chain of peptides, discovered by search engines in mass spectrometry proteomic analyses. Given the possible modifications and all their possible acceptor sites together with the corresponding localization scores, the proposed graph approach finds the combination of modifications on the amino acid chain that maximizes the total sum of localization scores while avoiding an increase in the processing time of the proteomic search. This approach to resolve conflicts of PTMs assignment can enable the identification of heavily modified peptides and increase the performance of proteomic searches when they are open to multiple modifications. \comment{}{Maybe I should add something fancier as the last sentence but couldn't think of something more suitable for now.}
 
 
 \section{Acknowledgements}

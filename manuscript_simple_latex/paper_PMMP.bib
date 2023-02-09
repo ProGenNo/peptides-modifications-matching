@@ -194,20 +194,6 @@ doi={10.1038/nbt.3109},
 url={https://doi.org/10.1038/nbt.3109}
 }
 
-@article{Karp_assignment,
-author = {Karp, Richard M.},
-title = {An algorithm to solve the m × n assignment problem in expected time O(mn log n)},
-journal = {Networks},
-volume = {10},
-number = {2},
-pages = {143-152},
-doi = {https://doi.org/10.1002/net.3230100205},
-url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/net.3230100205},
-eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/net.3230100205},
-abstract = {Abstract We give an algorithm to solve the m-source, n-destination assignment problem in expected time O(mn log n) under the assumption that the edge costs are independent random variables and the costs of the edges incident with any given source are identically distributed. The algorithm achieves its efficiency through an unusual application of priority queues.},
-year = {1980}
-}
-
 @article{JGraphT,
 author = {Michail, Dimitrios and Kinable, Joris and Naveh, Barak and Sichi, John V.},
 title = {JGraphT—A Java Library for Graph Data Structures and Algorithms},
@@ -228,6 +214,115 @@ numpages = {29},
 keywords = {data structures, network analysis, graph theory, Algorithmic library}
 }
 
-  
+@InProceedings{networkX,
+  author =       {Aric A. Hagberg and Daniel A. Schult and Pieter J. Swart},
+  title =        {Exploring Network Structure, Dynamics, and Function using NetworkX},
+  booktitle =   {Proceedings of the 7th Python in Science Conference},
+  pages =     {11 - 15},
+  address = {Pasadena, CA USA},
+  year =      {2008},
+  editor =    {Ga\"el Varoquaux and Travis Vaught and Jarrod Millman},
+}
 
+@ARTICLE{MS_Amanda,
+  title    = "{MS} Amanda 2.0: Advancements in the standalone implementation",
+  author   = "Dorfer, Viktoria and Strobl, Marina and Winkler, Stephan and
+              Mechtler, Karl",
+  abstract = "RATIONALE: Database search engines are the preferred method to
+              identify peptides in mass spectrometry data. However, valuable
+              software is in this context not only defined by a powerful
+              algorithm to separate correct from false identifications, but
+              also by constant maintenance and continuous improvements.
+              METHODS: In 2014, we presented our peptide identification
+              algorithm MS Amanda, showing its suitability for identifying
+              peptides in high-resolution tandem mass spectrometry data and its
+              ability to outperform widely used tools to identify peptides.
+              Since then, we have continuously worked on improvements to
+              enhance its usability and to support new trends and developments
+              in this fast-growing field, while keeping the original scoring
+              algorithm to assess the quality of a peptide spectrum match
+              unchanged. RESULTS: We present the outcome of these efforts, MS
+              Amanda 2.0, a faster and more flexible standalone version with
+              the original scoring algorithm. The new implementation has led to
+              a 3-5$\times$ speedup, is able to handle new ion types and
+              supports standard data formats. We also show that MS Amanda 2.0
+              works best when using only the most common ion types in a
+              particular search instead of all possible ion types. CONCLUSIONS:
+              MS Amanda is available free of charge from
+              https://ms.imp.ac.at/index.php?action=msamanda.",
+  journal  = "Rapid Commun Mass Spectrom",
+  volume   =  35,
+  number   =  11,
+  pages    = "e9088",
+  month    =  jun,
+  year     =  2021,
+  address  = "England",
+  language = "en"
+}
+
+@ARTICLE{SearchGUI,
+  title    = "{SearchGUI}: A Highly Adaptable Common Interface for Proteomics
+              Search and de Novo Engines",
+  author   = "Barsnes, Harald and Vaudel, Marc",
+  abstract = "Mass-spectrometry-based proteomics has become the standard
+              approach for identifying and quantifying proteins. A vital step
+              consists of analyzing experimentally generated mass spectra to
+              identify the underlying peptide sequences for later mapping to
+              the originating proteins. We here present the latest developments
+              in SearchGUI, a common open-source interface for the most
+              frequently used freely available proteomics search and de novo
+              engines that has evolved into a central component in numerous
+              bioinformatics workflows.",
+  journal  = "J Proteome Res",
+  volume   =  17,
+  number   =  7,
+  pages    = "2552--2555",
+  month    =  may,
+  year     =  2018,
+  address  = "United States",
+  keywords = "bioinformatics; de novo algorithms; protein identification;
+              search engines",
+  language = "en"
+}
+
+@ARTICLE{PhosphoRS,
+  title    = "Universal and confident phosphorylation site localization using
+              {phosphoRS}",
+  author   = "Taus, Thomas and K{\"o}cher, Thomas and Pichler, Peter and
+              Paschke, Carmen and Schmidt, Andreas and Henrich, Christoph and
+              Mechtler, Karl",
+  abstract = "An algorithm for the assignment of phosphorylation sites in
+              peptides is described. The program uses tandem mass spectrometry
+              data in conjunction with the respective peptide sequences to
+              calculate site probabilities for all potential phosphorylation
+              sites. Tandem mass spectra from synthetic phosphopeptides were
+              used for optimization of the scoring parameters employing all
+              commonly used fragmentation techniques. Calculation of
+              probabilities was adapted to the different fragmentation methods
+              and to the maximum mass deviation of the analysis. The software
+              includes a novel approach to peak extraction, required for
+              matching experimental data to the theoretical values of all
+              isoforms, by defining individual peak depths for the different
+              regions of the tandem mass spectrum. Mixtures of synthetic
+              phosphopeptides were used to validate the program by calculation
+              of its false localization rate versus site probability cutoff
+              characteristic. Notably, the empirical obtained precision was
+              higher than indicated by the applied probability cutoff. In
+              addition, the performance of the algorithm was compared to
+              existing approaches to site localization such as Ascore. In order
+              to assess the practical applicability of the algorithm to large
+              data sets, phosphopeptides from a biological sample were
+              analyzed, localizing more than 3000 nonredundant phosphorylation
+              sites. Finally, the results obtained for the different
+              fragmentation methods and localization tools were compared and
+              discussed.",
+  journal  = "J Proteome Res",
+  volume   =  10,
+  number   =  12,
+  pages    = "5354--5362",
+  month    =  nov,
+  year     =  2011,
+  address  = "United States",
+  language = "en"
+}
 
