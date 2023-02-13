@@ -50,13 +50,31 @@ M.~Vaudel, J.~M. Burkhart, R.~P. Zahedi, E.~Oveland, F.~S. Berven, A.~Sickmann,
   proteomics data sets,'' {\em Nature Biotechnology}, vol.~33, pp.~22--24, Jan
   2015.
 
-\bibitem{Karp_assignment}
-R.~M. Karp, ``An algorithm to solve the m × n assignment problem in expected
-  time o(mn log n),'' {\em Networks}, vol.~10, no.~2, pp.~143--152, 1980.
+\bibitem{networkX}
+A.~A. Hagberg, D.~A. Schult, and P.~J. Swart, ``Exploring network structure,
+  dynamics, and function using networkx,'' in {\em Proceedings of the 7th
+  Python in Science Conference} (G.~Varoquaux, T.~Vaught, and J.~Millman,
+  eds.), (Pasadena, CA USA), pp.~11 -- 15, 2008.
 
 \bibitem{JGraphT}
 D.~Michail, J.~Kinable, B.~Naveh, and J.~V. Sichi, ``Jgrapht—a java library
   for graph data structures and algorithms,'' {\em ACM Trans. Math. Softw.},
   vol.~46, may 2020.
+
+\bibitem{MS_Amanda}
+V.~Dorfer, M.~Strobl, S.~Winkler, and K.~Mechtler, ``{MS} amanda 2.0:
+  Advancements in the standalone implementation,'' {\em Rapid Commun Mass
+  Spectrom}, vol.~35, p.~e9088, June 2021.
+
+\bibitem{SearchGUI}
+H.~Barsnes and M.~Vaudel, ``{SearchGUI}: A highly adaptable common interface
+  for proteomics search and de novo engines,'' {\em J Proteome Res}, vol.~17,
+  pp.~2552--2555, May 2018.
+
+\bibitem{PhosphoRS}
+T.~Taus, T.~K{\"o}cher, P.~Pichler, C.~Paschke, A.~Schmidt, C.~Henrich, and
+  K.~Mechtler, ``Universal and confident phosphorylation site localization
+  using {phosphoRS},'' {\em J Proteome Res}, vol.~10, pp.~5354--5362, Nov.
+  2011.
 
 \end{thebibliography}
