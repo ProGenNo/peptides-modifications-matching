@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.12.17)  13 FEB 2023 11:22
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.12.17)  13 FEB 2023 15:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -599,24 +599,24 @@ File: l3backend-pdftex.def 2022-10-26 L3 backend support: PDF output (pdfTeX)
 (./PMMP.aux)
 \openout1 = `PMMP.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
 
 (/usr/local/texlive/2022/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -640,7 +640,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring OFF on input line 45.
+Package hyperref Info: Link coloring OFF on input line 46.
 
 (./PMMP.out) (./PMMP.out)
 \@outlinefile=\write4
@@ -685,20 +685,20 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 48.
+(Font)              <12> on input line 49.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 48.
+(Font)              <8> on input line 49.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 48.
+(Font)              <6> on input line 49.
 
-Overfull \hbox (135.6447pt too wide) in paragraph at lines 51--55
+Overfull \hbox (135.6447pt too wide) in paragraph at lines 52--56
 \OT1/cmr/bx/n/10 Availability and Im-ple-men-ta-tion: \OT1/cmr/m/n/10 An open s
 ource im-ple-men-ta-tion in Python is avail-able at https://github.com/ProGenNo
 /peptides-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 51--55
+Underfull \hbox (badness 10000) in paragraph at lines 52--56
 
  []
 
@@ -706,11 +706,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 51--55
 
 {/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 72.
+(Font)              <7> on input line 73.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 72.
+(Font)              <5> on input line 73.
 
-Overfull \hbox (153.88051pt too wide) in paragraph at lines 81--82
+Overfull \hbox (153.88051pt too wide) in paragraph at lines 82--83
 \OT1/cmr/m/n/10 utilities li-brary [[]] un-der an Apache-2.0 li-cense. It is lo
 -cated in the \OT1/cmr/m/it/10 com.compomics.util.experiment.identification.mod
 ification.peptide[]mapping
@@ -718,26 +718,27 @@ ification.peptide[]mapping
 
 [2]
 Package hyperref Info: bookmark level for unknown todo defaults to 0 on input l
-ine 83.
-<figures/figure_histone.png, id=101, 702.625pt x 150.5625pt>
+ine 84.
+<figures/figure_histone.png, id=100, 702.625pt x 150.5625pt>
 File: figures/figure_histone.png Graphic file (type png)
 <use figures/figure_histone.png>
-Package pdftex.def Info: figures/figure_histone.png  used on input line 109.
+Package pdftex.def Info: figures/figure_histone.png  used on input line 110.
 (pdftex.def)             Requested size: 273.14923pt x 58.53304pt.
-<figures/benchmark_23.02.02_threads.png, id=104, 602.25pt x 451.6875pt>
+ [3]
+<figures/benchmark_23.02.02_threads.png, id=116, 602.25pt x 451.6875pt>
 File: figures/benchmark_23.02.02_threads.png Graphic file (type png)
 <use figures/benchmark_23.02.02_threads.png>
 Package pdftex.def Info: figures/benchmark_23.02.02_threads.png  used on input 
-line 132.
+line 133.
 (pdftex.def)             Requested size: 223.07211pt x 167.30785pt.
-<figures/benchmark_23.02.02_size.png, id=105, 602.25pt x 451.6875pt>
+<figures/benchmark_23.02.02_size.png, id=117, 602.25pt x 451.6875pt>
 File: figures/benchmark_23.02.02_size.png Graphic file (type png)
 <use figures/benchmark_23.02.02_size.png>
 Package pdftex.def Info: figures/benchmark_23.02.02_size.png  used on input lin
-e 136.
+e 137.
 (pdftex.def)             Requested size: 223.07211pt x 167.30785pt.
- [3] [4 <./figures/figure_histone.png> <./figures/benchmark_23.02.02_threads.pn
-g (PNG copy)> <./figures/benchmark_23.02.02_size.png (PNG copy)>]
+ [4 <./figures/figure_histone.png> <./figures/benchmark_23.02.02_threads.png (P
+NG copy)> <./figures/benchmark_23.02.02_size.png (PNG copy)>]
 (./PMMP.bbl) [5] (./PMMP.aux)
 Package rerunfilecheck Info: File `PMMP.out' has not changed.
 (rerunfilecheck)             Checksum: BC5FE69AF2018D83D6233B8A17282567;1369.
@@ -745,7 +746,7 @@ Package rerunfilecheck Info: File `PMMP.out' has not changed.
 Here is how much of TeX's memory you used:
  21525 strings out of 474968
  411173 string characters out of 5776088
- 739468 words of memory out of 5000000
+ 740544 words of memory out of 5000000
  42646 multiletter control sequences out of 15000+600000
  474173 words of font info for 44 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -762,7 +763,7 @@ al/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local
 xlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texli
 ve/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texliv
 e/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on PMMP.pdf (5 pages, 287884 bytes).
+Output written on PMMP.pdf (5 pages, 288841 bytes).
 PDF statistics:
  193 PDF objects out of 1000 (max. 8388607)
  156 compressed objects within 2 object streams
