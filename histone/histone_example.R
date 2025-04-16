@@ -15,17 +15,18 @@ library(scico)
 library(grid)
 library(janitor)
 library(patchwork)
+library(here)
 
 
 # Parameters
 
-theme_set(theme_void(base_size = 14))
-sequence <- "ARTKQTARKSTGGKAPRKQLATKAARKSAPATGGVKKPHRYRPGTVALRE"
+theme_set(theme_minimal(base_size = 22))
+
 
 # Load data
 
 modification_occurrence <- read.table(
-  file = "histone/modification_occurrence.gz",
+  file = here("histone/modification_occurrence.gz"),
   header = T,
   sep = "\t",
   stringsAsFactors = F,
@@ -33,167 +34,311 @@ modification_occurrence <- read.table(
 )
 
 modification_weight <- read.table(
-  file = "histone/modification_weight.gz",
+  file = here("histone/modification_weight.gz"),
   header = T,
   sep = "\t",
   stringsAsFactors = F,
   comment.char = ''
 )
 
+# Plot all PSMs
 
-# Plot one example
+# psm_id <- 2059
 
-cpt <- 0
-
-ids <- c(20, 8, 1537, 35)
-
-unique_ids <- unique(modification_occurrence$psm)
-
-# for (id in sample(unique_ids, length(unique_ids))) {
-for (id in ids) {
+for (psm_id in unique(modification_occurrence$psm)) {
   
-  modifications_at_id <- as.character(unique(modification_occurrence$modification[modification_occurrence$psm == id]))
+  psm_occurrence <- modification_occurrence %>% 
+    filter(
+      psm == psm_id
+    )
   
-  if (length(modifications_at_id) == 2) {
-    
-    psm_mapping <- modification_occurrence %>% 
-      filter(
-        psm == id
-      ) %>% 
-      select(
-        -psm
-      ) %>% 
-      left_join(
-        modification_weight %>% 
-          filter(
-            psm == id
-          ) %>% 
-          select(
-            -psm
-          ),
-        by = "modification"
-      ) %>% 
-      mutate(
-        modification = as.character(modification),
-        xend = NA,
-        xend = ifelse(modification == modifications_at_id[1], -1, 1),
-        modification_name = ifelse(modification == "28.03130012828", "Dimethylation", modification),
-        modification_name = ifelse(modification == "42.0105646837", "Acetylation", modification_name),
-        modification_name = ifelse(modification == "42.0105646837", "Acetylation", modification_name),
-        modification_name = ifelse(modification == "79.96633052075", "Phosphorylation", modification_name),
-        modification_name = ifelse(modification == "14.01565006414", "Mehtylation", modification_name),
-        modification_name = ifelse(modification == "42.04695019242", "Trimehtylation", modification_name),
-        modification_name = paste0(modification_name, " (", occurrence, ")"),
-        weight_round = round(weight),
-        site = ifelse(site == 0, 1, site),
-        selected = factor(selected)
-      )
-    
-    sequence_df <- data.frame(
-      position = 1:nchar(sequence) - nchar(sequence) / 2
+  psm_weight <- modification_weight %>% 
+    filter(
+      psm == psm_id
     )
-    
-    for (i in 1:nchar(sequence)) {
-      
-      sequence_df$letter[i] <- substr(sequence, i, i)
-      
-    }
-    
-    min_max <- psm_mapping %>% 
-      select(xend, modification_name, site) %>% 
-      group_by(
-        modification_name
-      ) %>% 
-      summarize(
-        site_min = min(site),
-        site_max = max(site),
-        xend = min(xend)
-      )
-    
-    label_df <- psm_mapping %>% 
-      select(
-        modification_name, xend
-      ) %>% 
-      distinct()
-    
-    sequence_plot <- ggplot() +
-      geom_text(
-        data = sequence_df,
-        mapping = aes(
-          x = position,
-          y = 0,
-          label = letter
-        )
-      ) +
-      geom_text(
-        data = label_df,
-        mapping = aes(
-          x = 0,
-          y = xend,
-          label = modification_name
-        )
-      ) +
-      geom_segment(
-        data = psm_mapping,
-        mapping = aes(
-          x = site - nchar(sequence) / 2,
-          xend = site - nchar(sequence) / 2,
-          y = xend / 10,
-          yend = 4 * xend / 10
-        )
-      ) +
-      geom_text(
-        data = psm_mapping,
-        mapping = aes(
-          x = site - nchar(sequence) / 2,
-          y = xend / 2,
-          label = weight_round,
-          color = selected
-        )
-      ) +
-      geom_segment(
-        data = psm_mapping,
-        mapping = aes(
-          x = site - nchar(sequence) / 2,
-          xend = site - nchar(sequence) / 2,
-          y = 6 * xend / 10,
-          yend = 9 * xend / 10
-        )
-      ) +
-      geom_segment(
-        data = min_max,
-        mapping = aes(
-          x = site_min - nchar(sequence) / 2,
-          xend = site_max - nchar(sequence) / 2,
-          y = 9 * xend / 10,
-          yend = 9 * xend / 10
-        )
-      ) +
-      scale_color_manual(
-        values = c("grey", "black")
-      ) +
-      theme(
-        legend.position = "none"
-      )
-    
-    png(
-      filename = paste0("histone/figure_histone_", id, ".png"),
-      height = 150,
-      width = 700
+  
+  sites <- sort(unique(psm_weight$site))
+  
+  first_site <- psm_weight %>% 
+    group_by(
+      modification
+    ) %>% 
+    summarise(
+      first_site = min(site)
+    ) %>% 
+    arrange(
+      first_site
     )
-    grid.draw(sequence_plot)
-    device <- dev.off()
-    
-    cpt <- cpt + 1
-    
-    if (cpt >= 10) {
-      
-      break()
-      
-    }
-  }
+  
+  modifications <- first_site$modification
+  
+  n_sites <- length(sites)
+  n_modifications <- length(modifications)
+  
+  psm_occurrence <- psm_occurrence %>% 
+    mutate(
+      modifiation_label = as.character(round(modification, digits = 2)),
+      modifiation_label = ifelse(occurrence > 1, paste0(modifiation_label, " (", occurrence, ")"), modifiation_label),
+      modification_factor = factor(modification, levels = modifications),
+      x = as.numeric(modification_factor) / (n_modifications + 1)
+    )
+  
+  psm_weight <- psm_weight %>% 
+    mutate(
+      site_factor = factor(site, levels = sites),
+      x_site = as.numeric(site_factor)/(n_sites + 1),
+      selected_factor = factor(selected, levels = c(1, 0))
+    ) %>% 
+    left_join(
+      psm_occurrence %>% 
+        select(
+          modification,
+          x_modification = x
+        ),
+      by = "modification"
+    )
+  
+  psm_sites <- psm_weight %>% 
+    select(
+      site,
+      x_site
+    ) %>% 
+    distinct()
+  
+  assinment_plot <- ggplot() +
+    geom_text(
+      data = psm_sites,
+      mapping = aes(
+        x = x_site,
+        y = 2,
+        label = site
+      ),
+      vjust = 0,
+      size = 8
+    ) +
+    geom_text(
+      data = psm_occurrence,
+      mapping = aes(
+        x = x,
+        y = 1,
+        label = modifiation_label
+      ),
+      vjust = 1,
+      size = 8
+    ) +
+    geom_segment(
+      data = psm_weight,
+      mapping = aes(
+        x = x_site,
+        xend = x_modification,
+        y = 1.95,
+        yend = 1.05,
+        col = weight,
+        linetype = selected_factor
+      )
+    ) +
+    scale_color_scico(
+      name = "Score",
+      palette = "grayC",
+      limits = c(0, 1)
+    ) + 
+    scale_linetype_manual(
+      name = NULL,
+      values = c("solid", "dotted"),
+      labels = c("Selected", "Rejected")
+    ) +
+    ggtitle(
+      psm_occurrence$sequence[1]
+    ) +
+    theme(
+      axis.title = element_blank(),
+      axis.text = element_blank(),
+      panel.grid = element_blank()
+    )
+  
+  png(
+    filename = here(paste0("histone/plots/", psm_id, ".png")),
+    width = 900,
+    height = 600
+  )
+  grid.draw(assinment_plot)
+  device <- dev.off()
+  
 }
 
+
+# Select complex assignment examples
+
+score_per_psm <- modification_weight %>% 
+  select(
+    psm, weight
+  ) %>% 
+  distinct() %>% 
+  group_by(
+    psm
+  ) %>% 
+  summarize(
+    n_scores = n()
+  ) %>% 
+  arrange(
+    desc(n_scores)
+  )
+
+modification_overlap <- modification_weight %>% 
+  select(
+    psm, site, modification
+  ) %>% 
+  distinct() %>% 
+  group_by(
+    psm, site
+  ) %>% 
+  summarize(
+    mods_per_site = n()
+  ) %>% 
+  group_by(
+    psm
+  ) %>% 
+  summarize(
+    max_mods_per_site = max(mods_per_site)
+  ) %>% 
+  filter(
+    max_mods_per_site > 1
+  )
+
+# Plot examples
+
+plot_psm <- function(psm_id, label) {
+  
+  psm_occurrence <- modification_occurrence %>% 
+    filter(
+      psm == psm_id
+    )
+  
+  psm_weight <- modification_weight %>% 
+    filter(
+      psm == psm_id
+    )
+  
+  sites <- sort(unique(psm_weight$site))
+  
+  first_site <- psm_weight %>% 
+    group_by(
+      modification
+    ) %>% 
+    summarise(
+      first_site = min(site)
+    ) %>% 
+    arrange(
+      first_site
+    )
+  
+  modifications <- first_site$modification
+  
+  n_sites <- length(sites)
+  n_modifications <- length(modifications)
+  
+  psm_occurrence <- psm_occurrence %>% 
+    mutate(
+      modifiation_label = as.character(round(modification, digits = 2)),
+      modifiation_label = ifelse(occurrence > 1, paste0(modifiation_label, " (", occurrence, ")"), modifiation_label),
+      modification_factor = factor(modification, levels = modifications),
+      x = as.numeric(modification_factor) / (n_modifications + 1)
+    )
+  
+  psm_weight <- psm_weight %>% 
+    mutate(
+      site_factor = factor(site, levels = sites),
+      x_site = as.numeric(site_factor)/(n_sites + 1),
+      selected_factor = factor(selected, levels = c(1, 0))
+    ) %>% 
+    left_join(
+      psm_occurrence %>% 
+        select(
+          modification,
+          x_modification = x
+        ),
+      by = "modification"
+    )
+  
+  psm_sites <- psm_weight %>% 
+    select(
+      site,
+      x_site
+    ) %>% 
+    distinct()
+  
+  assinment_plot <- ggplot() +
+    geom_text(
+      data = psm_sites,
+      mapping = aes(
+        x = x_site,
+        y = 2,
+        label = site
+      ),
+      vjust = 0,
+      size = 8
+    ) +
+    geom_text(
+      data = psm_occurrence,
+      mapping = aes(
+        x = x,
+        y = 1,
+        label = modifiation_label
+      ),
+      vjust = 1,
+      size = 8
+    ) +
+    geom_segment(
+      data = psm_weight,
+      mapping = aes(
+        x = x_site,
+        xend = x_modification,
+        y = 1.95,
+        yend = 1.05,
+        col = weight,
+        linetype = selected_factor
+      )
+    ) +
+    scale_color_scico(
+      name = "Score",
+      palette = "grayC",
+      limits = c(0, 1)
+    ) + 
+    scale_linetype_manual(
+      name = NULL,
+      values = c("solid", "dotted"),
+      labels = c("Selected", "Rejected"),
+      drop = F
+    ) +
+    scale_y_continuous(
+      expand = c(0, 0.15)
+    ) +
+    ggtitle(
+      label = label,
+      subtitle = psm_occurrence$sequence[1]
+    ) +
+    theme(
+      axis.title = element_blank(),
+      axis.text = element_blank(),
+      panel.grid = element_blank()
+    )
+  
+  return(assinment_plot)
+  
+}
+
+plot_1 <- plot_psm(6353, "A")
+plot_2 <- plot_psm(2059, "B")
+
+png(
+  filename = here("histone/fig_histones.png"),
+  width = 900,
+  height = 600
+)
+grid.draw(
+  plot_1 / plot_2 + plot_layout(guides = 'collect')
+)
+device <- dev.off()
 
 
 
